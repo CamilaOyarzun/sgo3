@@ -1696,7 +1696,7 @@ class ContratoIdView(TemplateView):
         try:
             contadordiario = 0
             ultimoDiario = Contrato.objects.filter(trabajador = requer_trabajador.trabajador , status=True).latest('id')
-            if(contrato_diario == True):
+            if ultimoDiario:
                 # La fecha de inicio y la fecha de termino es la misma en contrato diario
                 cantidadcontratos = Contrato.objects.filter(requerimiento_trabajador_id=requerimiento_trabajador_id, tipo_documento__nombre='Contrato Diario', status=True ).count()
                 
@@ -1704,7 +1704,6 @@ class ContratoIdView(TemplateView):
                     fecha = ultimoDiario.fecha_termino_ultimo_anexo - timedelta(days=x)
                     if(Contrato.objects.filter(trabajador_id=ultimoDiario.trabajador, fecha_termino_ultimo_anexo = fecha , status=True ).exists()):
                         contadordiario = contadordiario + 1
-                        print()
                     else:
                         contadordiario = 0
                 print('contador de contratos', contadordiario)
@@ -1713,8 +1712,8 @@ class ContratoIdView(TemplateView):
                 if(fecha_restriccion > ultimoDiario.fecha_termino):
                     fecha_restriccion = ultimoDiario.fecha_termino + timedelta(days = 2)
                     mensaje = 'Restricción por contratos seguidos'
-        except:
-            print('')
+        except Exception as e:
+            print(e)
                
 
         
